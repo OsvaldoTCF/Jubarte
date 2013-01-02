@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="\"/>
+    <Version Value="7"/>
+    <General>
+      <Flags>
+        <LRSInOutputDirectory Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <TargetFileExt Value=".exe"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+      <Language Value=""/>
+      <CharSet Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="6">
+      <Unit0>
+        <Filename Value="tryplotpaneldemo.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos X="14" Y="9"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="tryplotpanelunit.pas"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TryPlotPanelUnit"/>
+        <CursorPos X="3" Y="165"/>
+        <TopLine Value="347"/>
+        <UsageCount Value="12"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="plotpanel.pas"/>
+        <UnitName Value="plotpanel"/>
+        <CursorPos X="18" Y="849"/>
+        <TopLine Value="69"/>
+        <UsageCount Value="10"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="G:\Programs\lazarus\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <CursorPos X="19" Y="1029"/>
+        <TopLine Value="1007"/>
+        <UsageCount Value="10"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="G:\Programs\lazarus\lcl\include\canvas.inc"/>
+        <CursorPos X="3" Y="1009"/>
+        <TopLine Value="1174"/>
+        <UsageCount Value="10"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\plotpanel.pas"/>
+        <UnitName Value="Plotpanel"/>
+        <CursorPos X="84" Y="922"/>
+        <TopLine Value="915"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit5>
+    </Units>
+    <JumpHistory Count="20" HistoryIndex="19">
+      <Position1>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position1>
+      <Position2>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="147" Column="65" TopLine="125"/>
+      </Position2>
+      <Position3>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="403" Column="26" TopLine="377"/>
+      </Position3>
+      <Position4>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="979" Column="75" TopLine="951"/>
+      </Position4>
+      <Position5>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="35" Column="13" TopLine="16"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="147" Column="65" TopLine="125"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="974" Column="72" TopLine="949"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="955" Column="32" TopLine="937"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="954" Column="55" TopLine="932"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="952" Column="76" TopLine="932"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="954" Column="16" TopLine="932"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="953" Column="66" TopLine="923"/>
+      </Position12>
+      <Position13>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="997" Column="10" TopLine="969"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="952" Column="4" TopLine="928"/>
+      </Position14>
+      <Position15>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="986" Column="16" TopLine="963"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="1006" Column="5" TopLine="945"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="969" Column="1" TopLine="947"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="1005" Column="3" TopLine="977"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="957" Column="56" TopLine="940"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\plotpanel.pas"/>
+        <Caret Line="969" Column="5" TopLine="937"/>
+      </Position20>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="8"/>
+    <PathDelim Value="\"/>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

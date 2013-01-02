@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="c:\lazarus\fpc\2.2.4\bin\i386-win32\fpc.exe" Date="995711722"/>
+  <Params Value=" -MObjFPC -Scgi -O1 -gl -vewnhi -l -Fuc:\lazarus\lcl\units\i386-win32\ -Fuc:\lazarus\lcl\units\i386-win32\win32\ -Fuc:\lazarus\packager\units\i386-win32\ &quot;-FuC:\Documents and Settings\Administrador\Desktop\Source_Code\plotpanel_lazarus_0.95\&quot; -Fu. &quot;-FUC:\Documents and Settings\Administrador\Desktop\Source_Code\plotpanel_lazarus_0.95\lib\i386-\&quot; -dLCL -dLCLwin32 plot.pas"/>
+</CONFIG>

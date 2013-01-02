@@ -1,0 +1,28 @@
+PlotPanel is a component for Lazarus to replace (more or less) the TChart component.
+There is a Delphi version of this component (see my website)
+
+With PlotPanel you can draw line- , dot- and bar-graphs. Animated graphs are also possible.
+
+To Install the PlotPanel component in Lazarus you have to do the
+following:
+Go with your mouse to the menubar.
+Then select "Components" in the menubar.
+You will see a roll-down menu where you have to select  "Open package file".
+Then you will see a new window. On the top you will see "Unit file name" with at the right-hand side a button labled "Browse". When You click that button you can go to the directory where you unpacked the PlotPanel.pas file.
+Select the PlotPanel.pas file and click the "Open" button.Then Click the OK button at the bottom.
+You will now see a new window with at the top left a button "Compile". Click this button. After that you can close the window with the cross-button at the top right. 
+I suppose there will be an aditional question now on wich you have to 
+say yes (I am not sure about that, because the component is already installed here, so I cannot find out).
+After you have done that all, there must be a new Tab in the componet palet with the name "Extra".
+You can use the Plotpanel now
+
+Run the PlotPanelDemo to explore the features of PlotPanel.
+N.B. You can try PlotPanel without installing the componet by running
+TryPlotPanel!
+
+
+Marien van Westen
+
+homesite: http://members.home.nl/mvanwesten
+email: mvanwesten@home.nl
+

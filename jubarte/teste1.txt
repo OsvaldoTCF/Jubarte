@@ -1,0 +1,3155 @@
+unit About;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ComCtrls, ExtCtrls;
+
+type
+
+  { TAboutForm }
+
+  TAboutForm = class(TForm)
+    Image1: TImage;
+    Memo1: TMemo;
+    Memo2: TMemo;
+    Memo3: TMemo;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+
+var
+  AboutForm: TAboutForm;
+
+implementation
+
+initialization
+  {$I about.lrs}
+
+end.
+
+unit converter;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, Buttons, math;
+type
+  { Tconverterform }
+  Tconverterform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  converterform: Tconverterform;
+implementation
+{ Tconverterform }
+procedure Tconverterform.BitBtn1Click(Sender: TObject);
+begin
+try
+  case radiogroup1.itemindex of
+  1:edit1.text:= floattostr( 10*log10(strtofloat(edit1.text)/0.001 )); //Watt >> DBM
+  0:edit1.text:= floattostr( power(10,strtofloat(edit1.text)/10) * 0.001); //DBM >> Watt
+  2:edit1.text:=floattostr(10*log10(strtofloat(edit1.text))); //dBw >> Watt
+  3:edit1.text:=floattostr(strtofloat(edit1.text) + 30); //dBw >> dBm
+end
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+procedure Tconverterform.BitBtn2Click(Sender: TObject);
+begin
+try
+   if radiogroup2.itemindex=0 then
+   edit2.text:= floattostr( strtoint(edit2.text) + 2.15) // DBD >> DBI
+   else
+   edit2.text:= floattostr( strtoint(edit2.text) - 2.15) // DBI >> DBD
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+initialization
+  {$I converter.lrs}
+end.
+unit cooling;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, Spin, Menus, Buttons,
+  About;
+type
+  { Tcoolingform }
+  Tcoolingform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ComboBox3: TComboBox;
+    Edit1: TEdit;
+    FloatSpinEdit1: TFloatSpinEdit;
+    FloatSpinEdit2: TFloatSpinEdit;
+    FloatSpinEdit3: TFloatSpinEdit;
+    FloatSpinEdit4: TFloatSpinEdit;
+    FloatSpinEdit5: TFloatSpinEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
+    Image8: TImage;
+    Image9: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem2: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
+    RadioGroup3: TRadioGroup;
+    SpinEdit3: TSpinEdit;
+    SpinEdit4: TSpinEdit;
+    SpinEdit6: TSpinEdit;
+    SpinEdit7: TSpinEdit;
+    SpinEdit8: TSpinEdit;
+    SpinEdit9: TSpinEdit;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure RadioGroup2ChangeBounds(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  coolingform: Tcoolingform;
+  rvol: extended;
+  tload: extended;
+implementation
+{ Tcoolingform }
+procedure Tcoolingform.BitBtn1Click(Sender: TObject);
+begin
+try
+  //Room Volume
+  rvol:=floatspinedit1.Value * floatspinedit2.Value;
+  //Room type
+  case radiogroup1.ItemIndex of
+  0:tload:=(rvol*16);
+  1:tload:=(rvol*22.3);
+  end;
+  //Window and Sun
+            //Curtains - morning
+              if (radiogroup2.itemindex=1) and (radiogroup3.itemindex=0) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*160));
+            //Curtains - afternoon
+              if (radiogroup2.itemindex=1) and (radiogroup3.itemindex=1) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*212));
+            //Curtains - shadow
+              if (radiogroup2.itemindex=1) and (radiogroup3.itemindex=2) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*20));
+            //No Curtains - morning
+              if (radiogroup2.itemindex=2) and (radiogroup3.itemindex=0) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*222));
+            //No Curtains - afternoon
+              if (radiogroup2.itemindex=2) and (radiogroup3.itemindex=1) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*410));
+            //No Curtains - shadow
+              if (radiogroup2.itemindex=2) and (radiogroup3.itemindex=2) then
+              tload:= tload + (spinedit3.value*(floatspinedit4.value*37));
+//Doors heat conduction
+//tload:=tload + ((floatspinedit3.Value * 125) *spinedit4.Value);
+  case combobox1.ItemIndex of
+  0:tload:=tload + spinedit4.value*((2.7 * floatspinedit3.Value * (spinedit9.Value - spinedit8.value))*0.9); //*0.9 transforms Watts into Kcal/H
+  1:tload:=tload + spinedit4.value*((19 * floatspinedit3.Value * (spinedit9.Value - spinedit8.value))*0.9);
+  end;
+//People
+  case combobox3.ItemIndex of
+  0:tload:=tload + (spinedit6.Value * 125);
+  1:tload:=tload + (spinedit6.Value * 106);
+  2:tload:=tload + (spinedit6.Value * 93);
+  end;
+//Equipment
+tload:= tload + (spinedit7.value*0.9);
+//Wall heat conduction
+  case combobox2.ItemIndex of
+  0:tload:=tload + ((2.2 * floatspinedit5.Value * (spinedit9.Value - spinedit8.value))*0.9); //*0.9 transforms Watts into Kcal/H
+  1:tload:=tload + ((2 * floatspinedit5.Value * (spinedit9.Value - spinedit8.value))*0.9);
+  2:tload:=tload + ((1.5 * floatspinedit5.Value * (spinedit9.Value - spinedit8.value))*0.9);
+  end;
+//Show Thermic load
+edit1.text:=floattostr(trunc((tload) *100)/100);
+edit1.enabled:=true;
+//Cooling System
+panel1.caption:='The cooling system needs at least';
+panel2.caption:=floattostr( trunc((tload*3.92)*100)/100);
+panel3.caption:='BTUs';
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+procedure Tcoolingform.BitBtn2Click(Sender: TObject);
+begin
+  //Clear
+  floatspinedit1.Clear;
+  floatspinedit2.Clear;
+  floatspinedit5.Clear;
+  spinedit8.Clear;
+  spinedit9.clear;
+  spinedit3.clear;
+  spinedit4.clear;
+  spinedit6.clear;
+  spinedit7.clear;
+  floatspinedit4.Clear;
+  floatspinedit3.Clear;
+  edit1.Clear;
+end;
+procedure Tcoolingform.MenuItem2Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure Tcoolingform.RadioGroup2ChangeBounds(Sender: TObject);
+begin
+//No window
+if radiogroup2.ItemIndex=0 then
+  begin
+  spinedit3.Enabled:=false;
+  spinedit3.value:=0;
+  floatspinedit4.Enabled:=false;
+  radiogroup3.enabled:=false;
+  end
+  else
+  begin
+  spinedit3.Enabled:=true;
+  spinedit3.value:=1;
+  floatspinedit4.Enabled:=true;
+  radiogroup3.enabled:=true;
+  end
+end;
+initialization
+  {$I cooling.lrs}
+end.
+unit fresnel;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ExtCtrls, ComCtrls, Buttons;
+type
+  { Tfresnelform }
+  Tfresnelform = class(TForm)
+    BitBtn1: TBitBtn;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Image1: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Panel1: TPanel;
+    UpDown1: TUpDown;
+    UpDown2: TUpDown;
+    procedure BitBtn1Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  fresnelform: Tfresnelform;
+implementation
+{ Tfresnelform }
+procedure Tfresnelform.BitBtn1Click(Sender: TObject);
+begin
+try
+  edit7.text:=floattostr( sqrt((strtofloat(edit1.text) * (300000000/(strtofloat(edit4.text)*1000000)) * strtofloat(edit2.text) * strtofloat(edit3.text)) /  (strtofloat(edit2.text)+strtofloat(edit3.text))) );
+  if strtofloat(edit6.text) >= (strtofloat(edit5.text) - strtofloat(edit7.text)) then
+  begin
+  Panel1.Font.Color:=clRed ;
+  Panel1.caption:= 'The obstacle interferes with ellipsoid'
+  end
+  else
+  begin
+  Panel1.Font.Color:=clGreen   ;
+  Panel1.caption:= 'The obstacle do not interferes with ellipsoid';
+  end;
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+initialization
+  {$I fresnel.lrs}
+end.
+unit iptel;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, Menus, StdCtrls, Spin, Buttons, PopupNotifier, ComCtrls, math, iptelqos,About;
+type
+  { Tiptelform }
+  Tiptelform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ComboBox3: TComboBox;
+    ComboBox4: TComboBox;
+    ComboBox5: TComboBox;
+    Edit1: TEdit;
+    Edit10: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    ImageList1: TImageList;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label3: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    PopupNotifier1: TPopupNotifier;
+    RadioGroup1: TRadioGroup;
+    SpinEdit1: TSpinEdit;
+    SpinEdit2: TSpinEdit;
+    SpinEdit3: TSpinEdit;
+    SpinEdit4: TSpinEdit;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBox5Change(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    Function Fatorial(n:Extended):Extended;
+  end; 
+var
+  iptelform: Tiptelform;
+  L2oh: extended;   //L2 overhead
+  L3oh: extended;   //L3 overhead
+  cpup: extended;   //cpu power
+  traf: extended;   //traffic
+  gos: extended;    //grade of service inputed
+  goscalc: extended;    //grade of service calculated
+  nc: extended;     //number of circuits
+  num: extended;     //numerator of erlang b equation
+  den: extended;     //denominator of erlang b equation
+  n: integer;     //auxiliar
+  i: integer;     //auxiliar
+implementation
+{ Tiptelform }
+procedure Tiptelform.MenuItem1Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure Tiptelform.RadioGroup1Click(Sender: TObject);
+begin
+// Simultaneous Calls Method Selection
+   case radiogroup1.ItemIndex of
+    0:begin    // Simple Method
+    spinedit4.value:=0;
+    spinedit3.value:=0;
+    spinedit2.value:=2;
+    spinedit2.Enabled:=false;
+    spinedit3.Enabled:=false;
+    spinedit4.enabled:=true;
+    end;
+    1:begin   // Erlang-B
+    spinedit4.value:=0;
+    spinedit3.value:=0;
+    spinedit2.value:=1;
+    spinedit3.Enabled:=true;
+    spinedit2.Enabled:=true;
+    spinedit4.Enabled:=false;
+   // n:=1; // Define initial value to N
+    //goscalc:=99999999;  //initial value to goscalc
+    end;
+end;
+end;
+function Tiptelform.Fatorial(n: Extended): Extended;
+begin
+If n = 0 Then
+Fatorial:= 1
+Else
+Fatorial:= n * Fatorial(n-1);
+end;
+procedure Tiptelform.ComboBox1Change(Sender: TObject);
+begin
+// CODEC Selection
+    case combobox1.ItemIndex of
+    0:begin //g711
+    edit5.text:=floattostr(64.00);
+    edit1.text:=floattostr(4.10);
+    edit2.text:=floattostr(0.35);
+    Image2.Picture.Bitmap := nil;
+    imagelist1.GetBitmap(0, Image2.Picture.Bitmap)
+    end;
+    1:begin //g723
+      edit5.text:=floattostr(5.30);
+      edit1.text:=floattostr(3.70);
+      edit2.text:=floattostr(11.00);
+      Image2.Picture.Bitmap := nil;
+      imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+    end;
+    2:begin //g726 r32
+      edit5.text:=floattostr(32.00);
+      edit1.text:=floattostr(3.85);
+      edit2.text:=floattostr(1.25);
+      Image2.Picture.Bitmap := nil;
+      imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+    end;
+    3:begin //g728
+      edit5.text:=floattostr(16.00);
+      edit1.text:=floattostr(3.61);
+      edit2.text:=floattostr(30.00);
+      Image2.Picture.Bitmap := nil;
+      imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+    end;
+    4:begin //g729A
+      edit5.text:=floattostr(8.00);
+      edit1.text:=floattostr(3.70);
+      edit2.text:=floattostr(12.00);
+      Image2.Picture.Bitmap := nil;
+      imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+     end;
+     5:begin //GSM FR
+      edit5.text:=floattostr(12.2);
+      edit1.text:=floattostr(3.50);
+      edit2.text:=floattostr(14.0);
+      Image2.Picture.Bitmap := nil;
+      imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+     end;
+     6:begin //NB AMR
+       edit5.text:=floattostr(4.75);
+       edit1.text:=floattostr(3.40);
+       edit2.text:=floattostr(14.00);
+       Image2.Picture.Bitmap := nil;
+       imagelist1.GetBitmap(1, Image2.Picture.Bitmap)
+     end;
+    end;
+end;
+procedure Tiptelform.ComboBox5Change(Sender: TObject);
+begin
+  // Signaling Selection
+    case combobox5.ItemIndex of
+    0: begin
+    edit10.text:=floattostr(8);  //h323
+    checkbox1.enabled:=true;
+    end;
+    1:begin
+      edit10.text:=floattostr(5.2);  //SIP
+      checkbox1.enabled:=true;
+    end;
+    2:begin
+      edit10.text:=floattostr(16);  //mgcp
+      checkbox1.enabled:=true;
+    end;
+    3:begin
+     edit10.text:=floattostr(16);  //ncs
+     checkbox1.enabled:=true;
+    end;
+    4:begin
+     edit10.text:=floattostr(4.8);  //iax2
+     checkbox1.enabled:=false;
+    end;
+    5:begin
+     edit10.text:=floattostr(6.4);  //iax2 trunked
+     checkbox1.enabled:=false;
+     popupnotifier1.Visible:= true;
+     popupnotifier1.Text:= 'The signalling BW value for IAX2 Trunked represents the value of the first call signalling, the following calls will have a smaller BW.' ;
+    end;
+end;
+end;
+procedure Tiptelform.BitBtn1Click(Sender: TObject);
+begin
+try
+//Enable Fields
+edit5.Enabled:=true;
+edit1.Enabled:=true;
+edit10.Enabled:=true;
+edit4.Enabled:=true;
+edit3.Enabled:=true;
+edit2.Enabled:=true;
+edit8.Enabled:=true;
+edit9.Enabled:=true;
+bitbtn3.enabled:=true;
+ // ### Packetization Size
+edit3.text:= floattostr( ( (strtofloat(edit5.text))  * spinedit1.value ) / 8);
+    // ### Frame Size
+//obs: IP+UDP+RTP = 40bytes
+// Store L2 overhead value on variable L2oh
+if checkbox1.Checked = true then   // Test if cRTP is enabled
+begin
+    case combobox3.ItemIndex of
+    0:L2oh:= 4 + 18 ; //Ethernet
+    1:L2oh:= 4 + 6 ;  //PPP
+    2:L2oh:= 4 + 6 ; //Multilink PPP
+    3:L2oh:= 4 + 22 ; //802.1q
+    4:L2oh:= 4 + 6 ; //Frame relay
+    5:L2oh:= 4 + 108 ; //wifi 802.11
+    6:L2oh:= 4 + 32 ; //docsis cable
+    end
+end;
+if checkbox1.Checked = false then    // Test if cRTP is disable
+begin
+ case combobox3.ItemIndex of
+    0:L2oh:= 40 + 18 ; //Ethernet
+    1:L2oh:= 40 + 6 ;  //PPP
+    2:L2oh:= 40 + 6 ; //Multilink PPP
+    3:L2oh:= 40 + 22 ; //802.1q
+    4:L2oh:= 40 + 6 ; //Frame relay
+    5:L2oh:= 40 + 108 ; //wifi 802.11
+    6:L2oh:= 40 + 32 ; //docsis cable
+end
+end;
+// Store L3 overhead value on variable L3oh
+case combobox4.ItemIndex of
+    0:L3oh:= 0 ; // None
+    1:L3oh:= 24 ; //GRE
+    2:L3oh:= 37 ; //IPsec Transport Mode DES/3DES
+    3:L3oh:= 53 ; //IPsec Transport Mode AES
+    4:L3oh:= 73 ; //IPsec Tunnel Mode
+    5:L3oh:= 24 ; //L2TP
+    6:L3oh:= 4 ; //MPLS
+    7:L3oh:= 8 ; //ADSL PPPoE
+    end;
+//Frame Size Calculation
+case combobox5.itemindex of
+0: edit8.text:= floattostr ( strtofloat(edit3.text) + L2oh + L3oh);  // 40 bytes to IP + UDP + RTP
+1: edit8.text:= floattostr ( strtofloat(edit3.text) + L2oh + L3oh);  // 40 bytes to IP + UDP + RTP
+2: edit8.text:= floattostr ( strtofloat(edit3.text) + L2oh + L3oh);  // 40 bytes to IP + UDP + RTP
+3: edit8.text:= floattostr ( strtofloat(edit3.text) + L2oh + L3oh);  // 40 bytes to IP + UDP + RTP
+4: edit8.text:= floattostr ( strtofloat(edit3.text) + (L2oh) + L3oh); // 40 bytes to IP + UDP + IAX2 Full frame
+5: edit8.text:= floattostr ( strtofloat(edit3.text) + (L2oh + 4 + 4) + L3oh); // Add 4 bytes to IAX2 Trunked, IP + UDP + IAX2 Full frame + IAX2 Mini frame
+end;
+// ## Packet Rate
+edit4.text:= floattostr ( 1/ (spinedit1.Value / 1000) );
+// One Call Bandwidth
+if checkbox2.Checked = false then   // Test if VAD is activated
+edit9.text:= floattostr (trunc((((strtofloat(edit8.text) * 8) * strtofloat(edit4.text)) /1000)*100) /100);
+if checkbox2.Checked = true then   // Test if VAD is activated
+edit9.text:= floattostr ( trunc(((((strtofloat(edit8.text) * 8) * strtofloat(edit4.text)) /1000) * 0.65) *100)/100);
+// CPU Resources
+ case combobox2.ItemIndex of
+    0:cpup:= 1.8 ; // intel 286 12mhz
+    1:cpup:= 11.4 ; // intel 386 dx
+    2:cpup:= 44.0 ; // motorola 68040
+    3:cpup:= 54.0 ; // intel 486 dx
+    4:cpup:= 541 ; // intel pentium pro
+    5:cpup:= 525 ; // power pc 750
+    6:cpup:= 1354 ; // intel P3 500mhz
+    7:cpup:= 2000 ; // arm a8
+    8:cpup:= 5935 ; // amd athlon 2400
+    9:cpup:= 9726 ; // intel p4 EE
+    10:cpup:= 14564 ; // amd a64 3800
+    11:cpup:= 10240 ; // sony ps3
+    12:cpup:= 49161 ; // Intel Core2Extreme QX6700 - 2.6GHz
+    13:cpup:= 76383 ; // intel core i7 EE
+    14:cpup:= 42820 ; // amd phenom 2 x4
+end;
+// CPU Benchmark
+panel3.caption:= floattostr (trunc ( cpup / strtofloat(edit2.text)*100)/100 );
+if radiogroup1.ItemIndex=1 then
+begin
+  // ######## Erlang-B ##########
+gos:=spinedit2.Value/100 ;
+traf:=spinedit3.value;
+goscalc:=99999999999;
+n:=1;
+while goscalc > gos do
+begin
+   den:=0;
+   num:=( (power(traf,n)) / Fatorial(n) ) ;  //Calculous of numerator
+    for i:=0 to n do
+     begin
+      den:= den + ( (power(traf,i)) / Fatorial(i) );  // Calculous of denominator
+     end;
+     goscalc:= num/den;      //Calculate GosCalc
+     n:=n+1; // Add another unit to N and try again
+end;
+     spinedit4.value:= n-1;   //Show total number of circuits
+  // Total Voice Bandwidth calculation using erlang-b
+  case combobox5.ItemIndex of
+  0: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // H323
+  1: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // SIP
+  2: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // MGCP
+  3: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // NCS
+  4: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // IAX2
+  5: panel1.caption:= floattostr (  strtofloat(edit9.text) + ( (( (strtofloat(edit3.text)) * 8 )/1000) * strtofloat(edit4.text) *  ((spinedit4.value -1)) ));  // IAX2 Trunked, Add the BW of 1st call to the BW of the other calls.
+  end;
+end
+else
+  begin
+  // Total Voice Bandwidth calculation without erlang-b
+  case combobox5.ItemIndex of
+  0: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // H323
+  1: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // SIP
+  2: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // MGCP
+  3: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // NCS
+  4: panel1.caption:=floattostr ( (strtofloat(edit9.text))   * spinedit4.value ) ;  // IAX2
+  5: panel1.caption:= floattostr (  strtofloat(edit9.text) + ( (( (strtofloat(edit3.text)) * 8 )/1000) * strtofloat(edit4.text) *  ((spinedit4.value -1)) ));  // IAX2 Trunked, Add the BW of 1st call to the BW of the other calls.
+  end;
+end;
+//Total Signaling Bandwidth calculation
+case combobox5.ItemIndex of
+0:panel2.caption:=floattostr ( (strtofloat(edit10.text))   * spinedit4.value ) ;   // H323
+1:panel2.caption:=floattostr ( (strtofloat(edit10.text))   * spinedit4.value ) ;   // SIP
+2:panel2.caption:=floattostr ( (strtofloat(edit10.text))   * spinedit4.value ) ;   // MGCP
+3:panel2.caption:=floattostr ( (strtofloat(edit10.text))   * spinedit4.value ) ;   // NCS
+4:panel2.caption:=floattostr ( (strtofloat(edit10.text))   * spinedit4.value ) ;   // IAX2
+5:panel2.caption:=floattostr ( (strtofloat(edit10.text)) + ( ((spinedit4.Value -1) * (4 * 8)) /1000 ) ); // IAX2 Trunked
+end;
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+procedure Tiptelform.BitBtn2Click(Sender: TObject);
+begin
+  // Clear
+edit5.text:='0';
+edit1.text:='0';
+edit10.text:='0';
+edit4.text:='0';
+edit3.text:='0';
+edit2.text:='0';
+edit8.text:='0';
+edit9.text:='0';
+spinedit1.value:=20;
+spinedit4.value:=0;
+spinedit3.value:=0;
+panel1.caption:='0';
+panel2.caption:='0';
+panel3.caption:='0';
+bitbtn3.enabled:=false;
+end;
+procedure Tiptelform.BitBtn3Click(Sender: TObject);
+begin
+  iptelqosform.show;
+end;
+initialization
+  {$I iptel.lrs}
+end.
+unit iptelqos;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ExtCtrls, Buttons, Menus, Spin, About;
+type
+  { Tiptelqosform }
+  Tiptelqosform = class(TForm)
+    BitBtn1: TBitBtn;
+    ComboBox1: TComboBox;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit6: TEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    Memo1: TMemo;
+    Memo2: TMemo;
+    MenuItem1: TMenuItem;
+    SpinEdit1: TSpinEdit;
+    SpinEdit2: TSpinEdit;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  iptelqosform: Tiptelqosform;
+implementation
+uses iptel;
+{ Tiptelqosform }
+procedure Tiptelqosform.BitBtn1Click(Sender: TObject);
+begin
+  // Select Vendor
+  case combobox1.ItemIndex of
+  0:begin //Cisco
+  memo1.lines.Clear;
+  memo1.Enabled:=true;
+  // Border equipment
+  memo1.Lines.Add('##Jubarte QoS Generator - Cisco##');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('configure terminal');
+  memo1.Lines.Add('mls qos');
+  memo1.Lines.Add('mls qos map cos-dscp 0 8 16 24 32 46 48 54');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('interface '+edit3.text);
+  memo1.Lines.Add('  mls qos trust cos');
+  memo1.Lines.Add('  mls qos trust device cisco-phone');
+  memo1.Lines.Add('  switchport priority extend cos 0');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('interface ' +edit4.text);
+  memo1.Lines.Add('  mls qos trust dscp');
+  memo1.Lines.Add('  mls qos trust cos');
+  // Core Equipment
+  memo2.lines.Clear;
+  memo2.Enabled:=true;
+  memo2.Lines.Add('##Jubarte QoS Generator - Cisco ##');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('configure terminal');
+  memo2.Lines.Add('access-list 100 permit udp any any eq 4569'); // match iax2
+  memo2.Lines.Add('access-list 100 permit udp any any eq 5036'); // match iax1
+  memo2.Lines.Add('access-list 100 permit udp any any eq 5060'); // match sip
+  memo2.Lines.Add('access-list 100 permit tcp any any eq 1720'); // match h323
+  memo2.Lines.Add('access-list 100 permit tcp any any range 2000 2002'); // skinny
+  memo2.Lines.Add('access-list 100 permit udp any any eq 2427'); // mgcp
+  memo2.Lines.Add('');
+  memo2.Lines.Add('class-map voice-media');
+  memo2.Lines.Add('  match ip dscp ef');
+  memo2.Lines.Add('class-map voice-signaling');
+  memo2.Lines.Add('  match ip dscp af31');
+  memo2.Lines.Add('  match access-group 100');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('policy-map Enterprise-Voice-Policy');
+  memo2.Lines.Add('class voice-media');
+  memo2.Lines.Add('  priority ' +iptelform.panel1.caption);
+  memo2.Lines.Add('class voice-signaling');
+  memo2.Lines.Add('  bandwidth '+ iptelform.panel2.caption);
+  memo2.Lines.Add('  set ip dscp af31');
+  memo2.Lines.Add('class class-default');
+  memo2.Lines.Add('  fair-queue');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('interface ' +edit6.text);
+  memo2.Lines.Add('  service-policy output Enterprise-Voice-Policy');
+  memo2.Lines.Add('');
+  end;
+  1:begin //Enterasys
+  memo1.lines.Clear;
+  memo1.Enabled:=true;
+  // Border equipment
+  memo1.Lines.Add('##Jubarte QoS Generator - Enterasys##');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set policy profile 1 name VoIPEdge-VLAN '+inttostr(spinedit1.Value)+' cos 5 egress-vlans '+inttostr(spinedit1.Value)+' tci-overwrite enable' );
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set policy rule admin-profile vlantag ' +inttostr(spinedit1.Value)+ ' mask ' +inttostr(spinedit1.Value)+ ' port-string ' +edit3.text+ ' admin-pid 1');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set policy rule 1 vlantag ' +inttostr(spinedit1.Value)+ ' mask ' +inttostr(spinedit1.Value)+ ' vlan ' +inttostr(spinedit1.Value)+ 'cos 9');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set cos reference irl 2.1 9 rate-limit 0');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set cos 9 priority 5 tos-value 184.0 txq-reference 8 irl-reference 1');
+  memo1.Lines.Add('');
+  memo1.Lines.Add('set cos state enable');
+  // Core equipment
+  memo2.lines.Clear;
+  memo2.Enabled:=true;
+  memo2.Lines.Add('##Jubarte QoS Generator - Enterasys ##');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set policy profile 1 name VoIPCore-VLAN'+inttostr(spinedit2.Value)+ ' cos 5 egress-vlans ' +inttostr(spinedit2.Value)+ ' tci-overwrite enable');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set policy rule admin-profile vlantag ' +inttostr(spinedit2.Value)+ ' mask 12 port-string ' +edit6.text+ ' admin-pid 1');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set policy rule 1 vlantag ' +inttostr(spinedit2.Value)+ ' mask 12 vlan ' +inttostr(spinedit2.Value)+ ' cos 8');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set cos port-resource irl 1.1 0 unit kbps rate ' + iptelform.panel1.caption);
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set cos reference irl 1.1 8 rate-limit 0');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set cos 8 priority 5 tos-value 184.0 txq-reference 8');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('irl-reference 0');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set cos state enable');
+  memo2.Lines.Add('');
+  memo2.Lines.Add('set diffserv adminmode enable');
+  memo2.Lines.Add('set diffserv class create all voip-ef');
+  memo2.Lines.Add('set diffserv class create all voip-af31');
+  memo2.Lines.Add('set diffserv class match iptos voip-ef 26 08');
+  memo2.Lines.Add('set diffserv class match iptos voip-af31 46 08');
+  memo2.Lines.Add('set diffserv policy create voip in');
+  memo2.Lines.Add('set diffserv policy class add voip voip-ef');
+  memo2.Lines.Add('set diffserv policy class add voip voip-af31');
+  memo2.Lines.Add('set diffserv policy mark ipdscp voip voip-ef ef');
+  memo2.Lines.Add('set diffserv policy mark ipdscp voip voip-af31 af31');
+  memo2.Lines.Add('set diffserv service add in ' +edit6.text);
+  memo2.Lines.Add('');
+    end;
+end;
+end;
+procedure Tiptelqosform.ComboBox1Change(Sender: TObject);
+begin
+  case combobox1.ItemIndex of
+  0:begin ////Set Cisco settings
+  spinedit1.Enabled:=false;
+  spinedit2.Enabled:=false;
+  end;
+  1:begin ////Set enterasys settings
+  spinedit1.Enabled:=True;
+  spinedit2.Enabled:=True;
+   end;
+end;
+end;
+initialization
+  {$I iptelqos.lrs}
+end.
+unit Main;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Buttons, StdCtrls, ExtCtrls, RadioLink, About, opticallink, satlink, cooling, ups,iptel;
+type
+  { TMainForm }
+  TMainForm = class(TForm)
+    BitBtn1: TBitBtn;
+    Image1: TImage;
+    Label2: TLabel;
+    Label3: TLabel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    SpeedButton6: TSpeedButton;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure SpeedButton5Click(Sender: TObject);
+    procedure SpeedButton6Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  MainForm: TMainForm;
+implementation
+{ TMainForm }
+procedure TMainForm.SpeedButton1Click(Sender: TObject);
+begin
+  RadioLinkForm.show;
+end;
+procedure TMainForm.Button1Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure TMainForm.BitBtn1Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure TMainForm.SpeedButton2Click(Sender: TObject);
+begin
+  opticallinkform.show;
+end;
+procedure TMainForm.SpeedButton3Click(Sender: TObject);
+begin
+  satlinkform.show;
+end;
+procedure TMainForm.SpeedButton4Click(Sender: TObject);
+begin
+  coolingform.show;
+end;
+procedure TMainForm.SpeedButton5Click(Sender: TObject);
+begin
+  upsform.show;
+end;
+procedure TMainForm.SpeedButton6Click(Sender: TObject);
+begin
+  iptelform.show;
+end;
+initialization
+  {$I main.lrs}
+end.
+unit opticallink;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, Spin, Buttons, math, Menus, ComCtrls,
+  converter, About, powermeter;
+type
+  { Topticallinkform }
+  Topticallinkform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    Edit1: TEdit;
+    Edit10: TEdit;
+    Edit11: TEdit;
+    Edit12: TEdit;
+    Edit13: TEdit;
+    Edit14: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
+    FloatSpinEdit1: TFloatSpinEdit;
+    FloatSpinEdit2: TFloatSpinEdit;
+    GroupBox1: TGroupBox;
+    GroupBox12: TGroupBox;
+    GroupBox15: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
+    RadioGroup3: TRadioGroup;
+    StaticText1: TStaticText;
+    UpDown1: TUpDown;
+    UpDown2: TUpDown;
+    UpDown3: TUpDown;
+    UpDown4: TUpDown;
+    UpDown5: TUpDown;
+    UpDown6: TUpDown;
+    UpDown7: TUpDown;
+    UpDown8: TUpDown;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+    procedure RadioGroup3Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  opticallinkform: Topticallinkform;
+  dtm : extended;
+  dtc: extended;
+  dmp: extended;
+  dpulso: extended;
+  v: extended;
+  y: extended;
+implementation
+{ Topticallinkform }
+procedure Topticallinkform.RadioGroup3Click(Sender: TObject);
+begin
+  if radiogroup3.itemindex=0 then
+  begin
+  edit4.text:=floattostr(0);
+  edit4.enabled:=false; // desabilita disp modal para monomodo
+  updown1.enabled:=false;  // desabilita updown para monomodo
+  edit10.enabled:=true; // habilita disp modo polarizacao
+  updown3.enabled:=true;  // desabilita updown
+  end
+  else
+  begin
+  edit4.enabled:=true; // reabilita disp modal
+  updown1.enabled:=true; // habilita updown
+  edit10.enabled:=false; // desabilita disp modo polarizacao
+  updown3.enabled:=false;  // desabilita updown
+  end
+  end;
+procedure Topticallinkform.MenuItem3Click(Sender: TObject);
+begin
+  converterform.show;
+end;
+procedure Topticallinkform.MenuItem4Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure Topticallinkform.BitBtn1Click(Sender: TObject);
+begin
+// Check if N1 is higher then N2
+if strtofloat(edit13.text) < strtofloat(edit14.text) then
+showmessage ('Error - N1 has to be higher then N2')
+else
+begin
+ try
+  // Alargamento temporal
+  dtm := strtofloat(edit4.text) * strtofloat(edit7.text); //Variavel de disp. modal
+  dtc := strtofloat(edit5.text) * strtofloat(edit7.text) * (floatspinedit1.Value)/1000; //variavel de disp. cromatica
+  dmp := strtofloat(edit10.text) * sqrt(strtofloat(edit7.text)); // Variavel de disp. modo polarizacao
+  edit8.text:= floattostr( sqrt(dtc*dtc + dtm*dtm) + dmp );
+  edit8.enabled:=True;
+  //Pulse duration
+  dpulso:= 1/(strtofloat(edit1.text)*1000000);
+  edit12.text:=floattostr((dpulso)*1000000000);
+  edit12.enabled:=true;
+  //Received power
+  edit9.text:= floattostr( strtofloat(edit2.text) - strtofloat(edit6.text)*strtofloat(edit7.text)- strtofloat(edit11.text) );
+  edit9.enabled:=true;
+  //Viabilidade quanto atenuacao
+  if strtofloat(edit9.text) >= strtofloat(edit3.text) then
+  begin
+  Panel2.Font.Color:=clGreen ;
+  Panel2.caption:= 'The link is viable about attenuation'
+  end
+  else
+  begin
+  Panel2.Font.Color:=clRed   ;
+  Panel2.caption:= 'Excessive signal attenuation';
+  end;
+//Definicao do valor de lambda zero em micro metros
+case radiogroup2.ItemIndex of
+0: y:=0.850;
+1: y:=1.300;
+2: y:=1.550;
+end;
+//Fiber type
+v:= (pi*floatspinedit2.Value*sqrt(power(strtofloat(edit13.text),2) - power(strtofloat(edit14.text),2))) / (y);
+if v < 2.405 then
+statictext1.Caption:='Monomode Optical Fiber Degree index';
+if v > 2.405 then
+statictext1.Caption:='Multimode Optical Fiber Degree index';
+if v < 2.405*sqrt(2) then
+statictext1.Caption:='Monomode Optical Fiber Gradual index';
+if v > 2.405*sqrt(2) then
+statictext1.Caption:='Multimode Optical Fiber Gradual index';
+  //Dispersion viability
+  if strtofloat(edit8.text)*0.000000001 < dpulso*0.25 then
+  begin
+  Panel1.Font.Color:=clGreen ;
+  Panel1.caption:= 'The link is viable about dispersion'
+  end
+  else
+  begin
+  Panel1.Font.Color:=clRed   ;
+  Panel1.caption:= 'Unacceptable time extension for the signal';
+  end;
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds. Remember that N1 should be higher then N2');
+end;
+end;
+//Plot optical power Chart
+powermeter.linktype:=0; //clear var
+powermeter.linktype:=2; //set to optical analyser
+powermeterform.show;
+end;
+procedure Topticallinkform.BitBtn2Click(Sender: TObject);
+begin
+//Clear
+  edit1.Clear;
+  edit2.Clear;
+  edit3.Clear;
+  edit4.Clear;
+  edit5.Clear;
+  edit6.Clear;
+  edit7.Clear;
+  edit8.Clear;
+  edit9.Clear;
+  edit10.Clear;
+end;
+procedure Topticallinkform.RadioGroup1Click(Sender: TObject);
+begin
+  // Spectral wifth definition
+//LED
+  if (radiogroup2.ItemIndex=0) and (radiogroup1.ItemIndex=0) then
+  begin
+  floatspinedit1.MinValue:=20;
+  floatspinedit1.maxvalue:=50;
+  floatspinedit1.Value:=20;
+  end;
+  if (radiogroup2.ItemIndex=1) and (radiogroup1.ItemIndex=0) then
+  begin
+  floatspinedit1.MinValue:=50;
+  floatspinedit1.maxvalue:=100;
+  floatspinedit1.value:=50;
+  end;
+  if (radiogroup2.ItemIndex=2) and (radiogroup1.ItemIndex=0) then
+  begin
+  floatspinedit1.MinValue:=0;
+  floatspinedit1.maxvalue:=200;
+  end;
+//LASER
+  if (radiogroup2.ItemIndex=0) and (radiogroup1.ItemIndex=1) then
+  begin
+  floatspinedit1.MinValue:=1;
+  floatspinedit1.maxvalue:=5;
+  floatspinedit1.value:=1;
+  end;
+  if (radiogroup2.ItemIndex=1) and (radiogroup1.ItemIndex=1) then
+  begin
+  floatspinedit1.MinValue:=0.05;
+  floatspinedit1.maxvalue:=1;
+  floatspinedit1.value:=0.05;
+  end;
+  if (radiogroup2.ItemIndex=2) and (radiogroup1.ItemIndex=1) then
+  begin
+  floatspinedit1.MinValue:=0.05;
+  floatspinedit1.maxvalue:=1;
+  floatspinedit1.value:=0.05;
+  end;
+end;
+initialization
+  {$I opticallink.lrs}
+end.
+unit powermeter;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Buttons, StdCtrls, ExtCtrls, Plotpanel, math;
+type
+  { Tpowermeterform }
+  Tpowermeterform = class(TForm)
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    PlotPanel1: TPlotPanel;
+    procedure FormShow(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
+    procedure Image4Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  powermeterform: Tpowermeterform;
+// ####  Radio Vars ####
+  linktype: integer;
+  i: integer;
+  i2: integer;
+  i3: integer;
+  i4: integer;
+  d: integer;
+  txpower: real;
+  txlinelenght: integer;
+  txlineat: real;
+  anttxgain: real;
+  conloss: real;
+  conlossd: real;
+  dist: integer;
+  freq: integer;
+  y2: real;
+  y3: real;
+  antrxgain: integer;
+  rxpower: integer;
+  rxlinelenght: integer;
+  rxlineat: real;
+  sense: integer;
+// ####  Optical Vars ####
+txpoweropt: real;
+optfiberlenght: integer;
+optfiberat: real;
+optconloss: real;
+k: integer;
+k1: integer;
+yo: real;
+senseopt: integer;
+implementation
+uses radiolink, opticallink;
+{ Tpowermeterform }
+procedure Tpowermeterform.FormShow(Sender: TObject);
+begin
+// Link type selection
+// ##################################################################
+// #                        RADIO LINK  ANALYSER                    #
+// ##################################################################
+case linktype of
+1:begin
+//Clear chart
+plotpanel1.ClearData;
+  //Plot TX power
+  txpower:=strtofloat(RadioLinkForm.edit2.text);
+  Plotpanel1.PlotPen.Width:=3;
+  PlotPanel1.AddXY(0,txpower,cllime,0);
+  //Plot TX Transmission Line attenuation
+  txlinelenght:=strtoint(RadioLinkForm.edit3.text);
+  txlineat:=strtofloat(RadioLinkForm.edit4.text);
+  for i:=1 to txlinelenght do
+  begin
+  y := txpower - (i * txlineat);
+  PlotPanel1.AddXY(i,y,cllime,0);
+  end;
+  i:=txlinelenght+1;
+  //Plot Connectors Loss uplink
+  conloss:=strtoint(RadioLinkForm.edit5.text) * strtofloat(RadioLinkForm.edit6.text);
+  PlotPanel1.AddXY(i,y-conloss,cllime,0);
+  i:=i+1;
+  //Plot TX Antenna Gain
+  anttxgain:=strtoint(RadioLinkForm.edit7.text);
+  PlotPanel1.AddXY(i,y-conloss+anttxgain,cllime,0);
+  y:=y-conloss+anttxgain;
+  //Plot Free space loss
+  Dist:=strtoint(radiolinkform.edit15.text);
+  freq:=strtoint(radiolinkform.edit1.text);
+  for d:=1 to dist do
+  begin
+  y2 := (y) - (32.45 + 20*Log10(freq) + 20*Log10(d));
+  PlotPanel1.AddXY(i+d,y2,cllime,0);
+  end;
+  i:=(dist+i)+1;
+  // Plot RX Antenna and power Gain
+  antrxgain:=strtoint(RadioLinkForm.edit14.text);
+  rxpower:=strtoint(RadioLinkForm.edit8.text);
+  y2:=y2+antrxgain+rxpower;
+  PlotPanel1.AddXY(i,y2,cllime,0);
+  //Plot RX Transmission Line attenuation
+  rxlinelenght:=strtoint(RadioLinkForm.edit10.text);
+  rxlineat:=strtofloat(RadioLinkForm.edit11.text);
+  i:=i+1;
+  for i2:=1 to rxlinelenght do
+  begin
+  y3 := y2 - (i2 * rxlineat);
+  PlotPanel1.AddXY(i+i2,y3,cllime,0);
+  end;
+  //Plot Connectors Loss downlink
+  i3:= i+rxlinelenght+1;
+  conlossd:=strtoint(RadioLinkForm.edit12.text) * strtofloat(RadioLinkForm.edit13.text);
+  PlotPanel1.AddXY(i3,y3-conlossd,cllime,0);
+  //Define Y scale
+    //plotpanel1.YMax:=strtofloat(RadioLinkForm.edit2.text) +5 ;
+    //plotpanel1.Ymin:= y2 - (antrxgain+rxpower) -5;
+  //Define X Scale
+    //plotpanel1.XMin:=-1 ;
+    //plotpanel1.XMax:=dist + txlinelenght + rxlinelenght +8 ;
+ //Plot Receiver sensibility
+plotpanel1.LayerOption:=true;
+PlotPanel1.LayerOptions(0,pmline,3);
+PlotPanel1.LayerOptions(1,pmline,2);
+  for i4:=0 to 1000 do
+    begin
+    sense:=strtoint(radiolinkform.Edit9.text);
+    PlotPanel1.AddXY(i4,sense,clred,1);
+  end;
+  //Radio Chart Autoscale
+  plotpanel1.AutoScale(0);
+  end;
+ // ##################################################################
+ // #                        OPTICAL LINK  ANALYSER                  #
+ // ##################################################################
+2:begin
+//Clear chart
+plotpanel1.ClearData;
+  //Plot optical TX power
+  txpoweropt:=strtofloat(opticallinkform.edit2.text);
+  Plotpanel1.PlotPen.Width:=3;
+  PlotPanel1.AddXY(0,txpoweropt,cllime,0);
+  //Plot Line attenuation power
+  optfiberlenght:=strtoint(opticallinkform.edit7.text);
+  optfiberat:=strtofloat(opticallinkform.edit6.text);
+  for k:=1 to optfiberlenght do
+  begin
+  yo := txpoweropt - (k * optfiberat);
+  PlotPanel1.AddXY(k,yo,cllime,0);
+  end;
+  //Plot optical connector loss
+  optconloss:=strtofloat(opticallinkform.edit11.text);
+  PlotPanel1.AddXY(k,yo-optconloss,cllime,0);
+   //Plot optical Receiver sensibility
+  plotpanel1.LayerOption:=true;
+  PlotPanel1.LayerOptions(0,pmline,3);
+  PlotPanel1.LayerOptions(1,pmline,2);
+  for k1:=0 to 1000 do
+    begin
+    senseopt:=strtoint(opticallinkform.Edit3.text);
+    PlotPanel1.AddXY(k1,senseopt,clred,1);
+  end;
+  //Optical chart AutoScale ajustment
+  plotpanel1.AutoScale(0);
+  plotpanel1.XMax:= plotpanel1.XMax + 1;
+  plotpanel1.YMax:= plotpanel1.YMax + 3;
+  plotpanel1.YMin:= plotpanel1.YMin - 3;
+end;
+// ##################################################################
+// #                      SATELLITE LINK  ANALYSER                  #
+// ##################################################################
+3:begin
+//Clear chart
+plotpanel1.ClearData;
+  //Plot optical TX power
+  txpoweropt:=strtofloat(opticallinkform.edit2.text);
+  Plotpanel1.PlotPen.Width:=3;
+end;
+end;
+end;
+//end;
+procedure Tpowermeterform.Image1Click(Sender: TObject);
+begin
+ //Zoom +
+plotpanel1.XMax:= plotpanel1.XMax - 1;
+plotpanel1.YMin:= plotpanel1.YMin + 3;
+plotpanel1.YMax:= plotpanel1.YMax - 3;
+plotpanel1.YInterval:=5;
+end;
+procedure Tpowermeterform.Image3Click(Sender: TObject);
+begin
+//Zoom -
+ plotpanel1.XMax:= plotpanel1.XMax + 1;
+ plotpanel1.YMax:= plotpanel1.YMax + 3;
+ plotpanel1.YMin:= plotpanel1.YMin - 3;
+ plotpanel1.YInterval:=10;
+end;
+procedure Tpowermeterform.Image4Click(Sender: TObject);
+begin
+// Power button to close form
+  powermeterform.Close;
+end;
+initialization
+  {$I powermeter.lrs}
+end.
+unit RadioLink;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, ComCtrls, Buttons, math, Menus, TAGraph, TASeries,
+  TASources, About, converter, fresnel, Plotpanel, powermeter;
+type
+  { TRadioLinkForm }
+  TRadioLinkForm = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    Edit1: TEdit;
+    Edit10: TEdit;
+    Edit11: TEdit;
+    Edit12: TEdit;
+    Edit13: TEdit;
+    Edit14: TEdit;
+    Edit15: TEdit;
+    Edit16: TEdit;
+    Edit17: TEdit;
+    Edit18: TEdit;
+    Edit19: TEdit;
+    Edit2: TEdit;
+    Edit20: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
+    GroupBox8: TGroupBox;
+    GroupBox9: TGroupBox;
+    Image1: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label3: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem3: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    Panel1: TPanel;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem5Click(Sender: TObject);
+    procedure MenuItem6Click(Sender: TObject);
+    procedure MenuItem7Click(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+   // function AddXY(Const AXValue, AYValue: Double;Const AXLabel: String; AColor: TColor) : Longint;
+  end; 
+var
+  RadioLinkForm: TRadioLinkForm;
+  i:Integer;
+  y:Real;
+implementation
+{ TRadioLinkForm }
+procedure TRadioLinkForm.MenuItem3Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure TRadioLinkForm.MenuItem5Click(Sender: TObject);
+begin
+  RadioLinkForm.close;
+end;
+procedure TRadioLinkForm.MenuItem6Click(Sender: TObject);
+begin
+  converterform.show;
+end;
+procedure TRadioLinkForm.MenuItem7Click(Sender: TObject);
+begin
+  fresnelform.show;
+end;
+//Calculate RADIO LINK
+procedure TRadioLinkForm.BitBtn1Click(Sender: TObject);
+begin
+try
+//enable buttons
+edit16.Enabled:=True;
+edit17.Enabled:=True;
+edit18.Enabled:=True;
+edit19.Enabled:=True;
+edit20.Enabled:=True;
+//Free space loss
+Edit16.Text:=floattostr(32.45 + 20*Log10(strtofloat(Edit1.text)) + 20*Log10(strtofloat(Edit15.text)) );
+//Uplink loss
+Edit19.text:=floattostr( (strtofloat(edit3.text) * strtofloat(edit4.text)) + (strtofloat(edit5.text) * strtofloat(edit6.text)));
+//EIRP
+edit17.text:=floattostr(strtofloat(edit2.text) - strtofloat(edit19.text) + strtofloat(edit7.text));
+//Downlink loss
+Edit20.text:=floattostr( (strtofloat(edit10.text) * strtofloat(edit11.text)) + (strtofloat(edit12.text) * strtofloat(edit13.text)));
+//Received power
+edit18.text:= floattostr( (strtofloat(edit17.text) - strtofloat(edit16.text) + strtofloat(edit14.text) - strtofloat(edit20.text) + strtofloat(edit8.text)));
+//Analise de viabilidade
+if strtofloat(edit18.text) >= strtofloat(edit9.text) then
+begin
+Panel1.Font.Color:=clGreen ;
+Panel1.caption:= 'The link is viable'
+end
+else
+begin
+Panel1.Font.Color:=clRed   ;
+Panel1.caption:= 'The link is not viable';
+end;
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+//Plot Power Meter CHART and Clear
+powermeter.linktype:=0; //clear var
+powermeter.linktype:=1; //set to radio analyser
+powermeterform.show;
+end;
+procedure TRadioLinkForm.BitBtn2Click(Sender: TObject);
+begin //Clear
+  edit1.Clear;
+  edit2.Clear;
+  edit3.Clear;
+  edit4.Clear;
+  edit5.Clear;
+  edit6.Clear;
+  edit7.Clear;
+  edit8.Clear;
+  edit9.Clear;
+  edit10.Clear;
+  edit11.Clear;
+  edit12.Clear;
+  edit13.Clear;
+  edit14.Clear;
+  edit15.Clear;
+end;
+initialization
+  {$I radiolink.lrs}
+end.
+unit satlink;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, ComCtrls, Buttons, math, Spin, Menus,
+  converter, About, powermeter;
+type
+  { Tsatlinkform }
+  Tsatlinkform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ComboBox3: TComboBox;
+    ComboBox4: TComboBox;
+    Edit1: TEdit;
+    Edit10: TEdit;
+    Edit11: TEdit;
+    Edit12: TEdit;
+    Edit13: TEdit;
+    Edit14: TEdit;
+    Edit15: TEdit;
+    Edit16: TEdit;
+    Edit17: TEdit;
+    Edit18: TEdit;
+    Edit19: TEdit;
+    Edit2: TEdit;
+    Edit20: TEdit;
+    Edit21: TEdit;
+    Edit22: TEdit;
+    Edit23: TEdit;
+    Edit24: TEdit;
+    Edit25: TEdit;
+    Edit26: TEdit;
+    Edit27: TEdit;
+    Edit28: TEdit;
+    Edit29: TEdit;
+    Edit3: TEdit;
+    Edit30: TEdit;
+    Edit31: TEdit;
+    Edit32: TEdit;
+    Edit33: TEdit;
+    Edit34: TEdit;
+    Edit35: TEdit;
+    Edit36: TEdit;
+    Edit37: TEdit;
+    Edit38: TEdit;
+    Edit39: TEdit;
+    Edit4: TEdit;
+    Edit40: TEdit;
+    Edit41: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    Image1: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    Label4: TLabel;
+    Label40: TLabel;
+    Label41: TLabel;
+    Label42: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    Label5: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
+    Label54: TLabel;
+    Label55: TLabel;
+    Label56: TLabel;
+    Label57: TLabel;
+    Label58: TLabel;
+    Label59: TLabel;
+    Label6: TLabel;
+    Label60: TLabel;
+    Label61: TLabel;
+    Label62: TLabel;
+    Label63: TLabel;
+    Label64: TLabel;
+    Label65: TLabel;
+    Label66: TLabel;
+    Label67: TLabel;
+    Label68: TLabel;
+    Label69: TLabel;
+    Label7: TLabel;
+    Label70: TLabel;
+    Label71: TLabel;
+    Label72: TLabel;
+    Label73: TLabel;
+    Label74: TLabel;
+    Label75: TLabel;
+    Label76: TLabel;
+    Label77: TLabel;
+    Label78: TLabel;
+    Label79: TLabel;
+    Label8: TLabel;
+    Label80: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    Panel1: TPanel;
+    RadioGroup1: TRadioGroup;
+    RadioGroup3: TRadioGroup;
+    RadioGroup5: TRadioGroup;
+    RadioGroup6: TRadioGroup;
+    SpinEdit1: TSpinEdit;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+    procedure SpinEdit1Change(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  satlinkform: Tsatlinkform;
+  La: extended;
+  cosfia: extended;
+  cosfib: extended;
+  Lb: extended;
+  Re: extended;
+  Ro: extended;
+  aA: extended;
+  aB: extended;
+  mo: extended;
+  fec: extended;
+  fs: extended;
+  cnos: extended;
+  cnod: extended;
+implementation
+{ Tsatlinkform }
+procedure Tsatlinkform.ComboBox1Change(Sender: TObject);
+begin
+//Propriedades dos satelites
+  case combobox1.ItemIndex of
+  0:begin //Starone C1
+  edit5.text:=inttostr(65);
+  spinedit1.minvalue:=5850;
+  spinedit1.maxvalue:=6403;
+  spinedit1.text:= inttostr(5850);
+  //Informacoes do satelite
+  edit29.text:=floattostr(-86); //Flux saturacao
+  edit30.text:=floattostr(5.5); //backoff
+  edit32.text:=floattostr(-2.5); // Fator merito
+  edit34.text:=floattostr(37);
+  edit35.text:=floattostr(4);
+  end;
+  1: begin //AMAZONAS
+  edit5.text:=inttostr(61);
+  spinedit1.minvalue:=5859;
+  spinedit1.maxvalue:=6405;
+  spinedit1.text:= inttostr(5859)
+  end;
+  2: begin //Starone C2
+  edit5.text:=inttostr(70);
+  spinedit1.minvalue:=3628;
+  spinedit1.maxvalue:=4070;
+  spinedit1.text:= inttostr(3628)
+  end;
+  3:edit5.text:=inttostr(63);
+  4:edit5.text:=inttostr(75);
+  5:edit5.text:=inttostr(84);
+  6:edit5.text:=inttostr(00);
+  end
+end;
+procedure Tsatlinkform.MenuItem2Click(Sender: TObject);
+begin
+  converterform.show;
+end;
+procedure Tsatlinkform.MenuItem4Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure Tsatlinkform.RadioGroup1Click(Sender: TObject);
+begin
+  if radiogroup1.itemindex=0 then
+  radiogroup3.itemindex:=1
+  else
+  radiogroup3.itemindex:=0;
+end;
+procedure Tsatlinkform.SpinEdit1Change(Sender: TObject);
+begin
+//Ganho por unid. area da antena do satelite
+edit31.text:=floattostr( 10*log10 ( (4*pi) / (power(300000000/strtofloat(spinedit1.text)/1000000,2))));
+//TRANSPONDERS
+// ################################## STARONE C1 ####################################################################
+//Subida - V
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5850) and (strtofloat(spinedit1.text) <= 5883) then
+  begin
+  edit18.text:='01AECO';
+  edit19.Text:='33';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5887) and (strtofloat(spinedit1.text) <= 5923) then
+  begin
+  edit18.text:='02AECO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5927) and (strtofloat(spinedit1.text) <= 5963) then
+  begin
+  edit18.text:='01ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5967) and (strtofloat(spinedit1.text) <= 6003) then
+  begin
+  edit18.text:='02ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6007) and (strtofloat(spinedit1.text) <= 6043) then
+  begin
+  edit18.text:='03ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6047) and (strtofloat(spinedit1.text) <= 6083) then
+  begin
+  edit18.text:='04ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6087) and (strtofloat(spinedit1.text) <= 6123) then
+  begin
+  edit18.text:='05ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6127) and (strtofloat(spinedit1.text) <= 6163) then
+  begin
+  edit18.text:='06ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6167) and (strtofloat(spinedit1.text) <= 6203) then
+  begin
+  edit18.text:='07ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6207) and (strtofloat(spinedit1.text) <= 6243) then
+  begin
+  edit18.text:='08ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6247) and (strtofloat(spinedit1.text) <= 6283) then
+  begin
+  edit18.text:='09ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6287) and (strtofloat(spinedit1.text) <= 6323) then
+  begin
+  edit18.text:='10ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6327) and (strtofloat(spinedit1.text) <= 6363) then
+  begin
+  edit18.text:='11ANCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6367) and (strtofloat(spinedit1.text) <= 6403) then
+  begin
+  edit18.text:='12ANCO';
+  edit19.Text:='36';
+  end;
+  // Starone C1 - Subida H
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5867) and (strtofloat(spinedit1.text) <= 5903) then
+  begin
+  edit18.text:='01BECO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5907) and (strtofloat(spinedit1.text) <= 5943) then
+  begin
+  edit18.text:='02BECO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5947) and (strtofloat(spinedit1.text) <= 5983) then
+  begin
+  edit18.text:='01BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5987) and (strtofloat(spinedit1.text) <= 6023) then
+  begin
+  edit18.text:='02BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6027) and (strtofloat(spinedit1.text) <= 6063) then
+  begin
+  edit18.text:='03BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6067) and (strtofloat(spinedit1.text) <= 6103) then
+  begin
+  edit18.text:='04BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6107) and (strtofloat(spinedit1.text) <= 6143) then
+  begin
+  edit18.text:='05BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6147) and (strtofloat(spinedit1.text) <= 6183) then
+  begin
+  edit18.text:='06BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6187) and (strtofloat(spinedit1.text) <= 6223) then
+  begin
+  edit18.text:='07BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6227) and (strtofloat(spinedit1.text) <= 6263) then
+  begin
+  edit18.text:='08BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6267) and (strtofloat(spinedit1.text) <= 6303) then
+  begin
+  edit18.text:='09BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6307) and (strtofloat(spinedit1.text) <= 6343) then
+  begin
+  edit18.text:='10BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6347) and (strtofloat(spinedit1.text) <= 6383) then
+  begin
+  edit18.text:='11BNCO';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=0) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6387) and (strtofloat(spinedit1.text) <= 6423) then
+  begin
+  edit18.text:='12BNCO';
+  edit19.Text:='36';
+  end;
+  // ################################## STARONE C1 ####################################################################
+  // ################################## AMAZONAS ####################################################################
+  // AMAZONAS - Subida - V
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5859) and (strtofloat(spinedit1.text) <= 5913) then
+  begin
+  edit18.text:='C1';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5920) and (strtofloat(spinedit1.text) <= 5974) then
+  begin
+  edit18.text:='C2';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 5981) and (strtofloat(spinedit1.text) <= 6035) then
+  begin
+  edit18.text:='C3';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6042) and (strtofloat(spinedit1.text) <= 6096) then
+  begin
+  edit18.text:='C4';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6103) and (strtofloat(spinedit1.text) <= 6157) then
+  begin
+  edit18.text:='C5';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6164) and (strtofloat(spinedit1.text) <= 6218) then
+  begin
+  edit18.text:='C6';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6225) and (strtofloat(spinedit1.text) <= 6279) then
+  begin
+  edit18.text:='C7';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6286) and (strtofloat(spinedit1.text) <= 6340) then
+  begin
+  edit18.text:='C8';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6347) and (strtofloat(spinedit1.text) <= 6383) then
+  begin
+  edit18.text:='C9';
+  edit19.Text:='36';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=0) and (strtofloat(spinedit1.text) >= 6387) and (strtofloat(spinedit1.text) <= 6423) then
+  begin
+  edit18.text:='C10';
+  edit19.Text:='36';
+  end;
+  // AMAZONAS - Subida H
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5850) and (strtofloat(spinedit1.text) <= 5904) then
+  begin
+  edit18.text:='C11';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5911) and (strtofloat(spinedit1.text) <= 5965) then
+  begin
+  edit18.text:='C12';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 5972) and (strtofloat(spinedit1.text) <= 6026) then
+  begin
+  edit18.text:='C13';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6033) and (strtofloat(spinedit1.text) <= 6087) then
+  begin
+  edit18.text:='C14';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6094) and (strtofloat(spinedit1.text) <= 6148) then
+  begin
+  edit18.text:='C15';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6155) and (strtofloat(spinedit1.text) <= 6209) then
+  begin
+  edit18.text:='C16';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6216) and (strtofloat(spinedit1.text) <= 6270) then
+  begin
+  edit18.text:='C17';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6290) and (strtofloat(spinedit1.text) <= 6344) then
+  begin
+  edit18.text:='C18';
+  edit19.Text:='54';
+  end;
+  if (combobox1.Itemindex=1) and (radiogroup1.ItemIndex=1) and (strtofloat(spinedit1.text) >= 6351) and (strtofloat(spinedit1.text) <= 6405) then
+  begin
+  edit18.text:='C19';
+  edit19.Text:='54';
+  end;
+//##################### AMAZONAS #################################################################
+// ######## FREQUENCIAS  #####################################################
+//Freq Descida
+edit15.text:= floattostr ( strtofloat(spinedit1.text) - 2225);
+//MODULADOR e CONV SUBIDA - StarOne C1
+if edit18.text='01AECO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5866.5) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='02AECO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5905) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='01ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5945) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='02ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5985) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='03ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6025) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='04ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6065) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='05ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6105) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='06ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6145) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='07ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6185) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='08ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6225) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='09ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6265) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='10ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6305) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='11ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6345) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='12ANCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6385) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='01BECO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5885) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='02BECO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5925) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='01BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 5965) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='02BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6005) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='03BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6045) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='04BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6085) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='05BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6125) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='06BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6165) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='07BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6205) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='08BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6245) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='09BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6285) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='10BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6325) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='11BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6365) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+if edit18.text='12BNCO' then
+begin
+edit22.text:=floattostr( (strtofloat(spinedit1.text) - 6405) + 70);
+edit23.text:=floattostr( (strtofloat(spinedit1.text) - strtofloat(edit22.text)));
+end;
+//DEMODULADOR e CONV DESCIDA - StarOne C1
+if edit18.text='01AECO' then
+begin
+edit21.text:=floattostr( (3641.5 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='02AECO' then
+begin
+edit21.text:=floattostr( (3680 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='01ANCO' then
+begin
+edit21.text:=floattostr( (3720 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='02ANCO' then
+begin
+edit21.text:=floattostr( (3760 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='03ANCO' then
+begin
+edit21.text:=floattostr( (3800 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='04ANCO' then
+begin
+edit21.text:=floattostr( (3840 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='05ANCO' then
+begin
+edit21.text:=floattostr( (3880 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='06ANCO' then
+begin
+edit21.text:=floattostr( (3920 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='07ANCO' then
+begin
+edit21.text:=floattostr( (3960 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='08ANCO' then
+begin
+edit21.text:=floattostr( (4000 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='09ANCO' then
+begin
+edit21.text:=floattostr( (4040 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='10ANCO' then
+begin
+edit21.text:=floattostr( (4080 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='11ANCO' then
+begin
+edit21.text:=floattostr( (4120 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='12ANCO' then
+begin
+edit21.text:=floattostr( (4160 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='01BECO' then
+begin
+edit21.text:=floattostr( (3660 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='02BECO' then
+begin
+edit21.text:=floattostr( (3700 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='01BNCO' then
+begin
+edit21.text:=floattostr( (3740 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='02BNCO' then
+begin
+edit21.text:=floattostr( (3780 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='03BNCO' then
+begin
+edit21.text:=floattostr( (3820 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='04BNCO' then
+begin
+edit21.text:=floattostr( (3860 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='05BNCO' then
+begin
+edit21.text:=floattostr( (3900 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='06BNCO' then
+begin
+edit21.text:=floattostr( (3940 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='07BNCO' then
+begin
+edit21.text:=floattostr( (3980 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='08BNCO' then
+begin
+edit21.text:=floattostr( (4020 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='09BNCO' then
+begin
+edit21.text:=floattostr( (4060 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='10BNCO' then
+begin
+edit21.text:=floattostr( (4100 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='11BNCO' then
+begin
+edit21.text:=floattostr( (4140 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+if edit18.text='12BNCO' then
+begin
+edit21.text:=floattostr( (4180 - 70));
+edit20.text:=floattostr( (strtofloat(edit15.text) - (strtofloat(edit21.text))));
+end;
+//Modulador e Conv de Subida - AMAZONAS
+if	edit18.text=	'C1'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	5886	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C2'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	5947	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C3'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6008	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C4'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6069	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C5'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6130	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C6'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6191	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C7'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6252	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C8'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6313	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C9'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6365	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C10'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6405	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C11'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	5877	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C12'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	5938	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C13'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	5999	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C14'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6060	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C15'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6121	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C16'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6182	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C17'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6243	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C18'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6317	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+if	edit18.text=	'C19'	then
+begin
+edit22.text:=floattostr(	(strtofloat(spinedit1.text)	-	6378	)	+	70);
+edit23.text:=floattostr(	(strtofloat(spinedit1.text)	-	strtofloat(edit22.text)));
+end;
+// Amazonas - Demodulador e Conv de Descida
+if	edit18.text=	'C1'	then
+begin
+edit21.text:=floattostr(	(	3661	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C2'	then
+begin
+edit21.text:=floattostr(	(	3722	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C3'	then
+begin
+edit21.text:=floattostr(	(	3783	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C4'	then
+begin
+edit21.text:=floattostr(	(	3844	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C5'	then
+begin
+edit21.text:=floattostr(	(	3905	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C6'	then
+begin
+edit21.text:=floattostr(	(	3966	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C7'	then
+begin
+edit21.text:=floattostr(	(	4027	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C8'	then
+begin
+edit21.text:=floattostr(	(	4088	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C9'	then
+begin
+edit21.text:=floattostr(	(	4140	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C10'	then
+begin
+edit21.text:=floattostr(	(	4180	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C11'	then
+begin
+edit21.text:=floattostr(	(	3652	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C12'	then
+begin
+edit21.text:=floattostr(	(	3713	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C13'	then
+begin
+edit21.text:=floattostr(	(	3774	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C14'	then
+begin
+edit21.text:=floattostr(	(	3835	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C15'	then
+begin
+edit21.text:=floattostr(	(	3896	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C16'	then
+begin
+edit21.text:=floattostr(	(	3957	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C17'	then
+begin
+edit21.text:=floattostr(	(	4018	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C18'	then
+begin
+edit21.text:=floattostr(	(	4092	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+if	edit18.text=	'C19'	then
+begin
+edit21.text:=floattostr(	(	4153	-	70));
+edit20.text:=floattostr(	(strtofloat(edit15.text)	-	(strtofloat(edit21.text))));
+end;
+end;
+procedure Tsatlinkform.BitBtn1Click(Sender: TObject);
+begin
+try
+// ######## CARACTERISTICAS FISICAS ##########################################
+//Constantes
+Re:=6378;
+Ro:=35786;
+// Distancia A - Sat
+La :=  abs(strtofloat(edit5.text) - strtofloat(edit2.text));
+cosfia := cos(La*pi/180) * cos(strtofloat(edit1.text)*pi/180); //conv. rad > deg
+edit12.text:=floattostr( sqrt( (Re*Re)+ power((Re+Ro),2) - 2*Re*(Re+Ro)*cosfia));
+// Distancia B - Sat
+Lb :=  abs(strtofloat(edit5.text) - strtofloat(edit4.text));
+cosfib := cos(Lb*pi/180) * cos(strtofloat(edit3.text)*pi/180); //conv. rad > deg
+edit13.text:=floattostr( sqrt( (Re*Re)+ power((Re+Ro),2) - 2*Re*(Re+Ro)*cosfib));
+//Elevacao A
+edit6.text:=floattostr( arctan( (cosfia-(Re/(Re+Ro)))/(sqrt(1-(cosfia*cosfia))))*180/pi);
+//Elevacao B
+edit9.text:=floattostr( arctan( (cosfib-(Re/(Re+Ro)))/(sqrt(1-(cosfib*cosfib))))*180/pi);
+//Azimute A
+aA:= arctan(tan(La*pi/180)/sin(strtofloat(edit1.text)*pi/180))*180/pi;
+//Ponto hem norte - A
+if (radiogroup5.ItemIndex=0) and ((strtofloat(edit5.text))<= strtofloat(edit2.text)) then
+edit7.text:=floattostr( 180 - aA);
+if (radiogroup5.ItemIndex=0) and ((strtofloat(edit5.text))> strtofloat(edit2.text)) then
+edit7.text:=floattostr( 180 + aA);
+//Ponto hem sul - A
+if (radiogroup5.ItemIndex=1) and ((strtofloat(edit5.text))<= strtofloat(edit2.text)) then
+edit7.text:=floattostr(aA);
+if (radiogroup5.ItemIndex=1) and ((strtofloat(edit5.text))> strtofloat(edit2.text)) then
+edit7.text:=floattostr( 360 - aA);
+//Azimute B
+aB:= arctan(tan(Lb*pi/180)/sin(strtofloat(edit3.text)*pi/180))*180/pi;
+//Ponto hem norte - B
+if (radiogroup6.ItemIndex=0) and ((strtofloat(edit5.text))<= strtofloat(edit4.text)) then
+edit10.text:=floattostr( 180 - aB);
+if (radiogroup6.ItemIndex=0) and ((strtofloat(edit5.text))> strtofloat(edit4.text)) then
+edit10.text:=floattostr( 180 + aB);
+//Ponto hem sul - B
+if (radiogroup6.ItemIndex=1) and ((strtofloat(edit5.text))<= strtofloat(edit4.text)) then
+edit10.text:=floattostr(aB);
+if (radiogroup6.ItemIndex=1) and ((strtofloat(edit5.text))> strtofloat(edit4.text)) then
+edit10.text:=floattostr( 360 - aB);
+// Ang. Pol - A
+edit8.text:=floattostr(arccos( (sin(La*pi/180)) / (sqrt(1-(cosfia*cosfia))) ) *180/pi) ;
+// Ang. Pol - B
+edit11.text:=floattostr(arccos( (sin(Lb*pi/180)) / (sqrt(1-(cosfib*cosfib))) ) *180/pi) ;
+//Habilita edits
+edit6.enabled:=true;
+edit7.enabled:=true;
+edit8.enabled:=true;
+edit9.enabled:=true;
+edit10.enabled:=true;
+edit11.enabled:=true;
+edit12.enabled:=true;
+edit13.enabled:=true;
+// ######## CARACTERISTICAS FISICAS ##########################################
+// ######## ENLACE ###############################
+// C/No 1 port
+edit24.text:=floattostr( strtofloat(edit14.text) + 10*Log10(strtofloat(edit16.text)*1000) + strtofloat(edit17.text));
+//Definicao de variaveis
+  //Modulacao
+  case combobox2.ItemIndex of
+  0:mo:=1;
+  1:mo:=2;
+  2:mo:=3;
+  end;
+  //FEC
+  case combobox3.Itemindex of
+  0:fec:=1/2;
+  1:fec:=2/3;
+  2:fec:=3/4;
+  3:fec:=5/8;
+  4:fec:=6/8;
+  5:fec:=7/8;
+  end;
+  //Espaco de frequencia
+  case combobox4.Itemindex of
+  0:fs:=1.3;
+  1:fs:=1.4;
+  end;
+  //BW da portadora
+  edit25.text:=floattostr( strtofloat(edit16.text)/1000 * (1/mo) * (1/fec) * fs );
+//Quantidade de portadoras
+edit41.text:=floattostr( strtofloat(edit19.text) / strtofloat(edit25.text) );
+//Funcao de Arredondamento - Arredonda para menor valor inteiro
+if strtofloat(edit41.text) < round(strtofloat(edit41.text)) then
+edit41.text:= floattostr(round(strtofloat(edit41.text) - 1))
+else
+edit41.text:=floattostr( round(strtofloat(edit41.text)));
+// C/No requerido
+edit26.text:= floattostr(strtofloat(edit24.text) + 10*log10(strtofloat(edit41.text)) );
+// C/No subida
+edit33.text:= floattostr( strtofloat(edit29.text) - strtofloat(edit30.text) - strtofloat(edit31.text) + strtofloat(edit32.text) + 228.6);
+cnos:=strtofloat(edit33.text);
+//Free space loss
+edit28.text:= floattostr( 32.45 + 20*log10(strtofloat(edit15.text)) + 20*log10(strtofloat(edit13.text)) );
+// C/No Descida
+edit40.text:=floattostr( strtofloat(edit34.text) - strtofloat(edit35.text) - strtofloat(edit28.text) + 228.6 + strtofloat(edit36.text) - 10*log10(strtofloat(edit37.text)+strtofloat(edit38.text)) + strtofloat(edit39.text));
+cnod:=strtofloat(edit40.text);
+// C/No Calculado
+edit27.text:=floattostr( 10*log10 ( ((power(10,cnos/10))*(power(10,cnod/10))) / ((power(10,cnos/10))+(power(10,cnod/10))) ));
+// Analise de viabilidade
+if strtofloat(edit27.text) > strtofloat(edit26.text) then
+begin
+Panel1.Font.Color:=clGreen ;
+Panel1.caption:= 'The link is viable'
+end
+else
+begin
+Panel1.Font.Color:=clRed   ;
+Panel1.caption:= 'The link is not viable';
+end;
+// Habilita Botoes
+edit33.Enabled:=true;
+edit28.Enabled:=true;
+edit40.Enabled:=true;
+edit24.Enabled:=true;
+edit25.Enabled:=true;
+edit41.Enabled:=true;
+edit26.Enabled:=true;
+edit27.Enabled:=true;
+edit20.Enabled:=true;
+edit21.Enabled:=true;
+edit22.Enabled:=true;
+edit23.Enabled:=true;
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+//Plot Satellite power Chart
+//powermeter.linktype:=0; //clear var
+//powermeter.linktype:=3; //set to satellite analyser
+//powermeterform.show;
+end;
+procedure Tsatlinkform.BitBtn2Click(Sender: TObject);
+begin
+  // Clear
+  edit1.clear;
+  edit2.clear;
+  edit5.clear;
+  edit3.clear;
+  edit4.clear;
+  edit6.clear;
+  edit7.clear;
+  edit8.clear;
+  edit9.clear;
+  edit10.clear;
+  edit11.clear;
+  edit12.clear;
+  edit15.clear;
+  edit18.clear;
+  edit19.clear;
+  edit13.clear;
+  edit20.clear;
+  edit21.clear;
+  edit22.clear;
+  edit23.clear;
+  edit14.clear;
+  edit16.clear;
+  edit17.clear;
+  edit29.clear;
+  edit30.clear;
+  edit31.clear;
+  edit32.clear;
+  edit33.clear;
+  edit34.clear;
+  edit35.clear;
+  edit36.clear;
+  edit37.clear;
+  edit38.clear;
+  edit39.clear;
+  edit28.clear;
+  edit40.clear;
+  edit24.clear;
+  edit25.clear;
+  edit41.clear;
+  edit26.clear;
+  edit27.clear;
+end;
+initialization
+  {$I satlink.lrs}
+end.
+unit Splash;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ExtCtrls, ComCtrls, Menus;
+
+type
+
+  { TSplashScreenForm }
+
+  TSplashScreenForm = class(TForm)
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    ProgressBar1: TProgressBar;
+    procedure Image1Click(Sender: TObject);
+
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+
+var
+  SplashScreenForm: TSplashScreenForm;
+
+implementation
+
+{ TSplashScreenForm }
+
+
+
+procedure TSplashScreenForm.Image1Click(Sender: TObject);
+begin
+end;
+initialization
+  {$I splash.lrs}
+
+end.
+
+unit ups;
+{$mode objfpc}{$H+}
+interface
+uses
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, ComCtrls, StdCtrls, Spin, Buttons, Menus,
+  About;
+type
+  { Tupsform }
+  Tupsform = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ComboBox3: TComboBox;
+    ComboBox4: TComboBox;
+    Edit1: TEdit;
+    Edit10: TEdit;
+    Edit12: TEdit;
+    Edit13: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
+    Edit9: TEdit;
+    FloatSpinEdit1: TFloatSpinEdit;
+    FloatSpinEdit2: TFloatSpinEdit;
+    FloatSpinEdit3: TFloatSpinEdit;
+    FloatSpinEdit4: TFloatSpinEdit;
+    FloatSpinEdit5: TFloatSpinEdit;
+    FloatSpinEdit6: TFloatSpinEdit;
+    FloatSpinEdit7: TFloatSpinEdit;
+    FloatSpinEdit8: TFloatSpinEdit;
+    FloatSpinEdit9: TFloatSpinEdit;
+    GroupBox1: TGroupBox;
+    GroupBox10: TGroupBox;
+    GroupBox11: TGroupBox;
+    GroupBox12: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
+    GroupBox8: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
+    Image8: TImage;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label3: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label4: TLabel;
+    Label40: TLabel;
+    Label41: TLabel;
+    Label42: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    Label5: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
+    Label54: TLabel;
+    Label55: TLabel;
+    Label56: TLabel;
+    Label57: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    PageControl1: TPageControl;
+    Panel1: TPanel;
+    Panel10: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
+    SpinEdit1: TSpinEdit;
+    SpinEdit2: TSpinEdit;
+    SpinEdit3: TSpinEdit;
+    SpinEdit4: TSpinEdit;
+    SpinEdit5: TSpinEdit;
+    SpinEdit6: TSpinEdit;
+    SpinEdit7: TSpinEdit;
+    SpinEdit8: TSpinEdit;
+    StaticText1: TStaticText;
+    StaticText2: TStaticText;
+    StaticText3: TStaticText;
+    StaticText4: TStaticText;
+    StaticText5: TStaticText;
+    StaticText6: TStaticText;
+    StaticText7: TStaticText;
+    StaticText8: TStaticText;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure FloatSpinEdit1Change(Sender: TObject);
+    procedure FloatSpinEdit2Change(Sender: TObject);
+    procedure FloatSpinEdit5Change(Sender: TObject);
+    procedure FloatSpinEdit6Change(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
+    procedure SpinEdit1Change(Sender: TObject);
+    procedure SpinEdit3Change(Sender: TObject);
+    procedure SpinEdit5Change(Sender: TObject);
+    procedure SpinEdit6Change(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end; 
+var
+  upsform: Tupsform;
+  ah: extended;
+  ap: extended;
+  efv: extended;
+  sload: extended;
+  tes: extended;
+  temp: extended;
+implementation
+{ Tupsform }
+procedure Tupsform.SpinEdit1Change(Sender: TObject);
+begin
+// ####### BATTERY BANK ########
+//VA in sources with pfc - Realpower change
+edit1.text:=floattostr(spinedit1.value / floatspinedit1.value);
+end;
+procedure Tupsform.FloatSpinEdit1Change(Sender: TObject);
+begin
+//VA in sources with pfc - PF change
+edit1.text:=floattostr(spinedit1.value / floatspinedit1.value);
+end;
+procedure Tupsform.BitBtn1Click(Sender: TObject);
+begin
+try
+ //enable buttons
+ edit5.enabled:=true;
+ edit3.enabled:=true;
+ edit4.enabled:=true;
+ edit6.enabled:=true;
+//Effective voltage
+efv:=floatspinedit3.value*(spinedit2.value/100);
+ //Dimensioning of batteries A/H
+   //ah:=((spinedit1.value + spinedit3.value) * (floatspinedit4.Value/60))/(floatspinedit3.Value);
+  ah:=((spinedit1.value + spinedit3.value) * (floatspinedit4.Value/60))/efv;
+  panel1.Caption:='Each Battery or array needs to provide';
+  Panel2.Font.Color:=clRed;
+  panel2.caption:=floattostr(trunc((ah/spinedit4.value)*100)/100);
+  panel3.caption:='A/H';
+  //Dimensioning of power VA
+  panel4.Caption:='Amount of power needed is';
+  Panel5.Font.Color:=clRed;
+    // Safety margin
+    case combobox1.ItemIndex of
+    0:panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.10)*100)/100);
+    1:panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.15)*100)/100);
+    2:panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.2)*100)/100);
+    3:panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.25)*100)/100);
+    4:panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.3)*100)/100);
+    end;
+  //panel5.caption:=floattostr(trunc(((strtofloat(edit1.text)+strtofloat(edit2.text))*1.1)*100)/100);
+  panel6.caption:='VA';
+  //System Capacity
+  edit5.Text:=floattostr( trunc ((floatspinedit3.value)*(ah*spinedit4.value)*100)/100);
+  //generated power
+  ap:=spinedit4.value * floatspinedit3.value * (ah/spinedit4.value);
+  edit6.text:=floattostr( trunc(ap*10)/10);
+  //Inverter - output current
+  case combobox2.ItemIndex of
+  0:edit3.text:=floattostr(trunc ((ap/115)*1000)/1000);
+  1:edit3.text:=floattostr(trunc ((ap/220)*1000)/1000);
+  end;
+  //Inverter - output power
+  edit4.text:=floattostr(trunc ((ap*(spinedit2.Value/100))*100)/100);
+  except  // Exception treatment
+  showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+  end;
+  end;
+procedure Tupsform.BitBtn2Click(Sender: TObject);
+begin
+  //Clear
+  spinedit1.Clear;
+  floatspinedit1.Clear;
+  edit1.clear;
+  spinedit3.Clear;
+  floatspinedit2.Clear;
+  edit2.clear;
+  floatspinedit3.Clear;
+  floatspinedit4.Clear;
+  spinedit4.clear;
+end;
+procedure Tupsform.BitBtn3Click(Sender: TObject);
+begin
+try
+  //enabled buttons
+  edit12.Enabled:=true;
+  edit13.Enabled:=true;
+  edit9.Enabled:=true;
+  edit10.Enabled:=true;
+  // Calculate of supplied power ### NOBREAK ###
+    case combobox4.ItemIndex of
+  0:sload:= (strtofloat(edit7.text) + strtofloat(edit8.text)) *1.1;
+  1:sload:= (strtofloat(edit7.text) + strtofloat(edit8.text)) *1.15;
+  2:sload:= (strtofloat(edit7.text) + strtofloat(edit8.text)) *1.20;
+  3:sload:= (strtofloat(edit7.text) + strtofloat(edit8.text)) *1.25;
+  4:sload:= (strtofloat(edit7.text) + strtofloat(edit8.text)) *1.30;
+  end;
+  if sload <= spinedit8.value then
+  begin
+  Panel9.Font.Color:=clGreen ;
+  panel9.caption:='Nobreak suplly enough power to the system'
+  end
+  else
+  begin
+  Panel9.Font.Color:=clred ;
+  panel9.caption:='Nobreak does not suplly enough power to the system';
+  end;
+  // Generated power ### NOBREAK ###
+  edit12.text:=floattostr( floatspinedit8.value *  floatspinedit8.value);
+  // System capacity ### NOBREAK ###
+  edit13.text:=floattostr( floatspinedit8.value *  (floatspinedit8.value * floatspinedit9.value));
+  // Output current ### NOBREAK ###
+  case combobox3.ItemIndex of
+  0:edit9.text:= floattostr( trunc(((spinedit5.value + spinedit6.value)/115)*1000)/1000);
+  1:edit9.text:= floattostr( trunc(((spinedit5.value + spinedit6.value)/220)*1000)/1000);
+  end;
+  // Output power ### NOBREAK ###
+  edit10.text:=floattostr( trunc((floatspinedit7.value * (spinedit7.value/100) * floatspinedit8.value)*100)/100);
+  // Time estimation ### NOBREAK ###
+  tes:= ((floatspinedit9.value *(floatspinedit7.value*(spinedit7.value/100))*floatspinedit8.value));
+  temp:= tes / (spinedit5.value + spinedit6.value);
+  panel7.caption:='Batteries will keep system running for';
+  panel8.caption:= floattostr( trunc ((temp*60)*100)/100);
+  panel10.caption:= 'min';
+except  // Exception treatment
+showmessage ('ERROR - Division by zero or null value, check the numbers and unfilled fileds');
+end;
+end;
+procedure Tupsform.BitBtn4Click(Sender: TObject);
+begin
+  //Clear
+  spinedit5.Clear;
+  floatspinedit5.Clear;
+  edit7.clear;
+  spinedit6.Clear;
+  floatspinedit6.Clear;
+  edit8.clear;
+  floatspinedit7.Clear;
+  floatspinedit8.Clear;
+  floatspinedit9.Clear;
+  spinedit8.clear;
+end;
+procedure Tupsform.FloatSpinEdit2Change(Sender: TObject);
+begin
+//VA in sources without pfc - PF change
+edit2.text:=floattostr(spinedit3.value / floatspinedit2.value);
+end;
+procedure Tupsform.FloatSpinEdit5Change(Sender: TObject);
+begin
+   // ##### NOBREAK ####
+    //VA in sources with PFC
+  edit7.text:= floattostr(spinedit5.Value / floatspinedit5.value) ;
+end;
+procedure Tupsform.FloatSpinEdit6Change(Sender: TObject);
+begin
+  //VA in sources without PFC  ##### NOBREAK ####
+  edit8.text:=floattostr(spinedit6.value / floatspinedit6.value);
+end;
+procedure Tupsform.MenuItem1Click(Sender: TObject);
+begin
+  AboutForm.show;
+end;
+procedure Tupsform.SpinEdit3Change(Sender: TObject);
+begin
+//VA in sources without pfc - real power change
+edit2.text:=floattostr(spinedit3.value / floatspinedit2.value);
+end;
+procedure Tupsform.SpinEdit5Change(Sender: TObject);
+begin
+  //VA in sources with PFC ##### NOBREAK ####
+  edit7.text:= floattostr(spinedit5.Value / floatspinedit5.value) ;
+end;
+procedure Tupsform.SpinEdit6Change(Sender: TObject);
+begin
+  //VA in sources without PFC  ##### NOBREAK ####
+  edit8.text:=floattostr(spinedit6.value / floatspinedit6.value);
+end;
+initialization
+  {$I ups.lrs}
+end.
